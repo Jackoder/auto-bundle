@@ -75,6 +75,13 @@ public class StringUtilsTest {
     }
 
     @Test
+    public void testVariableNameWithoutPrefix() {
+        Assert.assertEquals(StringUtils.getVariableNameWithoutPrefix("mFloat"), "mFloat");
+        Assert.assertEquals(StringUtils.getVariableNameWithoutPrefix("mFloats"), "floats");
+        Assert.assertEquals(StringUtils.getVariableNameWithoutPrefix("mName"), "name");
+    }
+
+    @Test
     public void testEmpty() {
         Assert.assertTrue(StringUtils.isEmpty(null));
         Assert.assertTrue(StringUtils.isEmpty(""));

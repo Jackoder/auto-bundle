@@ -41,11 +41,14 @@ public class BundleWriter {
                 .addModifiers(Modifier.PUBLIC)
                 .addSuperinterface(ParameterizedTypeName.get(
                         ClassName.get(IAutoBundle.class), mBundleHolder.getClassName()));
-        mBundleHolder.getExtras().forEach(extra -> typeSpecBuilder.addField(getField(extra)));
+        for (ExtraHolder extraHolder : mBundleHolder.getExtras()) {
+            typeSpecBuilder.addField(getField(extraHolder));
+        }
         typeSpecBuilder.addMethod(getReadMethod(mBundleHolder.getClassName(), mBundleHolder.getExtras()));
         typeSpecBuilder.addMethod(getWriteMethod(mBundleHolder.getClassName(), mBundleHolder.getExtras()));
-        mBundleHolder.getExtras().forEach(extra ->
-                typeSpecBuilder.addMethod(getFieldBuilderMethod(generatedClassName, extra)));
+        for (ExtraHolder extraHolder : mBundleHolder.getExtras()) {
+            typeSpecBuilder.addMethod(getFieldBuilderMethod(generatedClassName, extraHolder));
+        }
         typeSpecBuilder.addMethod(getEmptyBuildMethod());
         typeSpecBuilder.addMethod(getBuilderMethod(mBundleHolder.getExtras()));
         JavaFile javaFile = JavaFile.builder(mBundleHolder.getPackageName(), typeSpecBuilder.build()).build();
@@ -63,8 +66,21 @@ public class BundleWriter {
                 .addParameter(ClassProvider.BUNDLE, "bundle")
                 .addParameter(typeClassName, "target");
         for (ExtraHolder extraHolder : extraHolders) {
-            builder.addStatement("target.$N = bundle.$N($S)",
-                    extraHolder.getBundleFieldName(), extraHolder.getGetMethod(), extraHolder.getKey());
+            if (extraHolder.isPrimitive()) {
+                builder.addStatement("target.$N = bundle.$N($S, target.$N)",
+                        extraHolder.getBundleFieldName(), extraHolder.getGetMethod(),
+                        extraHolder.getKey(), extraHolder.getBundleFieldName());
+            } else {
+                builder.beginControlFlow("if (bundle.containsKey($S))", extraHolder.getKey());
+                if (extraHolder.isNeedCast()) {
+                            builder.addStatement("target.$N = ($T)bundle.$N($S)", extraHolder.getFieldName(),
+                                    extraHolder.getTypeName(), extraHolder.getGetMethod(), extraHolder.getKey());
+                } else {
+                    builder.addStatement("target.$N = bundle.$N($S)", extraHolder.getFieldName(),
+                            extraHolder.getGetMethod(), extraHolder.getKey());
+                }
+                builder.endControlFlow();
+            }
         }
         return builder.build();
     }
@@ -83,10 +99,10 @@ public class BundleWriter {
     }
 
     private MethodSpec getFieldBuilderMethod(ClassName generatedClassName, ExtraHolder extraHolder) {
-        return MethodSpec.methodBuilder(extraHolder.getFieldName())
+        return MethodSpec.methodBuilder(extraHolder.getParamName())
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(extraHolder.asParameter())
-                .addStatement("this.$N = $N", extraHolder.getFieldName(), extraHolder.getFieldName())
+                .addStatement("this.$N = $N", extraHolder.getFieldName(), extraHolder.getParamName())
                 .addStatement("return this")
                 .returns(generatedClassName).build();
     }

@@ -17,6 +17,8 @@ public class KnownTypeHelper extends AbsTypeHelper {
 
     private static List<TypeName> sKnownTypes = Arrays.asList(
             ClassProvider.BUNDLE,
+            ClassProvider.SIZE,
+            ClassProvider.SIZEF,
             TypeName.get(String.class),
             TypeName.get(CharSequence.class),
             ArrayTypeName.of(String.class),

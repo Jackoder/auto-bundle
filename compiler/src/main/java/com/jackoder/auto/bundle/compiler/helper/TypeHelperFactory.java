@@ -1,10 +1,12 @@
 package com.jackoder.auto.bundle.compiler.helper;
 
+import com.jackoder.auto.bundle.compiler.helper.type.BinderHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.ParcelableArrayHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.ParcelableHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.ParcelableTypeVariableHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.PrimitiveArrayHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.PrimitiveHelper;
+import com.jackoder.auto.bundle.compiler.helper.type.SerializableHelper;
 import com.jackoder.auto.bundle.compiler.util.Utils;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
@@ -42,7 +44,12 @@ public class TypeHelperFactory {
         if (ParcelableTypeVariableHelper.isKnownParcelableTypeVariable(typeName, elementUtils)) {
             return new ParcelableTypeVariableHelper(typeName, elementUtils);
         }
-        //TODO
+        if (isSerializable(typeName, elementUtils)) {
+            return new SerializableHelper(typeName, elementUtils);
+        }
+        if (isBinder(typeName, elementUtils)) {
+            return new BinderHelper(typeName, elementUtils);
+        }
         return null;
     }
 
@@ -72,6 +79,13 @@ public class TypeHelperFactory {
         return false;
     }
 
+    public static boolean isSerializable(ClassName className, Elements elementUtils) {
+        return Utils.implementsInterface(
+                Utils.getTypeMirror(className, elementUtils),
+                Serializable.class.getCanonicalName()
+        );
+    }
+
     public static boolean isSerializable(TypeName typeName, Elements elements) {
         if (typeName.isPrimitive()) {
             return false;
@@ -94,10 +108,29 @@ public class TypeHelperFactory {
         return false;
     }
 
-    public static boolean isSerializable(ClassName className, Elements elementUtils) {
+    public static boolean isBinder(ClassName className, Elements elementUtils) {
         return Utils.implementsInterface(
                 Utils.getTypeMirror(className, elementUtils),
-                Serializable.class.getCanonicalName()
+                "android.os.IBinder"
         );
+    }
+
+    public static boolean isBinder(TypeName typeName, Elements elements) {
+        if (typeName instanceof WildcardTypeName
+                || typeName instanceof TypeVariableName
+                || typeName instanceof ArrayTypeName
+                || typeName.isPrimitive()) {
+            // TODO handle these better. Check is the assumption is valid
+            return false;
+        }
+        if (typeName instanceof ClassName) {
+            return isBinder((ClassName) typeName, elements);
+        }
+        if (typeName instanceof ParameterizedTypeName) {
+            ParameterizedTypeName parameterizedTypeName = (ParameterizedTypeName) typeName;
+            ClassName primaryType = parameterizedTypeName.rawType;
+            return isBinder(primaryType, elements);
+        }
+        return false;
     }
 }

@@ -61,6 +61,7 @@ public class BundleProcessor extends AbstractProcessor implements IProcessor {
             }
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
                     "Exception while processing AutoBundle classes. Message:\n" + e.getMessage());
         }

@@ -22,6 +22,7 @@ public class ExtraHolder {
     IProcessor mProcessor;
 
     AbsTypeHelper mTypeHelper;
+    TypeName      mTypeName;
     String        mFieldName;
     String        mKey;
 
@@ -40,8 +41,16 @@ public class ExtraHolder {
         return mFieldName;
     }
 
+    public TypeName getTypeName() {
+        return mTypeHelper.getTypeName();
+    }
+
     public String getFieldName() {
         return StringUtils.getVariableName(mFieldName);
+    }
+
+    public String getParamName() {
+        return StringUtils.getVariableNameWithoutPrefix(mFieldName);
     }
 
     public String getGetMethod() {
@@ -52,6 +61,14 @@ public class ExtraHolder {
         return "put" + mTypeHelper.getBundleMethodSuffix();
     }
 
+    public boolean isPrimitive() {
+        return mTypeHelper.getTypeName().isPrimitive();
+    }
+
+    public boolean isNeedCast() {
+        return mTypeHelper.isNeedCast();
+    }
+
     public String getKey() {
         return mKey;
     }
@@ -59,10 +76,10 @@ public class ExtraHolder {
     public FieldSpec asField(Modifier... modifiers) {
         TypeName typeName = mTypeHelper.getTypeName().isPrimitive() ?
                 mTypeHelper.getTypeName().box() : mTypeHelper.getTypeName();
-        return FieldSpec.builder(typeName, StringUtils.getVariableName(mFieldName), modifiers).build();
+        return FieldSpec.builder(typeName, getFieldName(), modifiers).build();
     }
 
     public ParameterSpec asParameter(Modifier... modifiers) {
-        return ParameterSpec.builder(mTypeHelper.getTypeName(), StringUtils.getVariableName(mFieldName), modifiers).build();
+        return ParameterSpec.builder(mTypeHelper.getTypeName(), getParamName(), modifiers).build();
     }
 }

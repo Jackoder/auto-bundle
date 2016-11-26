@@ -160,19 +160,30 @@ public class StringUtils {
      */
     public static String getVariableName(String name) {
         if(name == null) return null;
-
-        if (name.length() >= 2) {
-            Pattern p = Pattern.compile("[a-z_][A-Z_]");
-            Matcher m = p.matcher(name.subSequence(0, 2));
-            if (m.find()) {
-                return getVariableName(name.substring(1));
-            }
-        }
-
         String className = getClassName(name);
         String firstChar = Character.toString(className.charAt(0));
 
         return className.replaceFirst(firstChar, firstChar.toLowerCase());
+    }
+
+    /**
+     * Converts snake-cased/constant name into
+     * java variable name
+     * e.g : MAIN_ACTIVITY = mainActivity
+     * @param name snake-cased/constant name
+     * @return name as variable name
+     */
+    public static String getVariableNameWithoutPrefix(String name) {
+        if (!isEmpty(name) && name.length() >= 2) {
+            Pattern p = Pattern.compile("[a-z_][A-Z_]");
+            Matcher m = p.matcher(name.subSequence(0, 2));
+            if (m.find()) {
+                if (!javaKeywords.contains(name.substring(1).toLowerCase())) {
+                    return getVariableName(name.substring(1));
+                }
+            }
+        }
+        return getVariableName(name);
     }
 
     /**

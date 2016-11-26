@@ -12,8 +12,6 @@ import java.util.List;
 
 import javax.lang.model.util.Elements;
 
-import static android.R.attr.type;
-
 /**
  * @author Jackoder
  * @version 2016/11/26
