@@ -1,8 +1,16 @@
 package com.jackoder.auto.bundle.compiler.holder;
 
-import java.lang.reflect.Type;
+import com.jackoder.auto.bundle.ann.Extra;
+import com.jackoder.auto.bundle.compiler.IProcessor;
+import com.jackoder.auto.bundle.compiler.helper.AbsTypeHelper;
+import com.jackoder.auto.bundle.compiler.helper.TypeHelperFactory;
+import com.jackoder.auto.bundle.compiler.util.StringUtils;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 
 /**
  * @author Jackoder
@@ -10,41 +18,51 @@ import javax.lang.model.element.Element;
  */
 public class ExtraHolder {
 
-    Element mElement;
+    Element    mElement;
+    IProcessor mProcessor;
 
-    Type   mType;
-    String mFiledName;
-    String mKey;
+    AbsTypeHelper mTypeHelper;
+    String        mFieldName;
+    String        mKey;
 
-    private ExtraHolder(Element element) {
-
+    public ExtraHolder(Element element, IProcessor processor) {
+        mElement = element;
+        mProcessor = processor;
+        mTypeHelper = TypeHelperFactory.getHelper(TypeName.get(element.asType()), processor.elementUtils());
+        mFieldName = element.getSimpleName().toString();
+        if (element.getModifiers().contains(Modifier.PRIVATE)) {
+            throw new IllegalStateException("@Extra field " + mFieldName + " must not be private or static.");
+        }
+        mKey = element.getAnnotation(Extra.class).key();
     }
 
-    public static ExtraHolder from(Element element) {
-        ExtraHolder extraHolder = new ExtraHolder(element);
-        //TODO
-        return extraHolder;
+    public String getBundleFieldName() {
+        return mFieldName;
     }
 
-    public Type getType() {
-        return mType;
-    }
-
-    public String getFiledName() {
-        return mFiledName;
+    public String getFieldName() {
+        return StringUtils.getVariableName(mFieldName);
     }
 
     public String getGetMethod() {
-        //TODO
-        return null;
+        return "get" + mTypeHelper.getBundleMethodSuffix();
     }
 
     public String getPutMethod() {
-        //TODO
-        return null;
+        return "put" + mTypeHelper.getBundleMethodSuffix();
     }
 
     public String getKey() {
         return mKey;
+    }
+
+    public FieldSpec asField(Modifier... modifiers) {
+        TypeName typeName = mTypeHelper.getTypeName().isPrimitive() ?
+                mTypeHelper.getTypeName().box() : mTypeHelper.getTypeName();
+        return FieldSpec.builder(typeName, StringUtils.getVariableName(mFieldName), modifiers).build();
+    }
+
+    public ParameterSpec asParameter(Modifier... modifiers) {
+        return ParameterSpec.builder(mTypeHelper.getTypeName(), StringUtils.getVariableName(mFieldName), modifiers).build();
     }
 }

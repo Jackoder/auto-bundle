@@ -20,15 +20,15 @@ public class TemplateBundle implements IAutoBundle<Object> {
     T xxx;
 
     @Override
-    public void read(Bundle bundle, Object target) {
-        target.xxx = bundle.getInt("key");
-        target.xxx = bundle.getParcelable("key2");
+    public void read(Bundle BUNDLE, Object target) {
+        target.xxx = BUNDLE.getInt("key");
+        target.xxx = BUNDLE.getParcelable("key2");
     }
 
     @Override
-    public void write(Object target, Bundle bundle) {
-        bundle.putInt("key2", target.xxx);
-        bundle.putParcelable("key2", target.xxx);
+    public void write(Object target, Bundle BUNDLE) {
+        BUNDLE.putInt("key2", target.xxx);
+        BUNDLE.putParcelable("key2", target.xxx);
     }
 
     TemplateBundle xxx(T xxx) {

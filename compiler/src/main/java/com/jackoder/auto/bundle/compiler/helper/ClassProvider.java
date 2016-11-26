@@ -12,8 +12,8 @@ public class ClassProvider {
     }
 
     // android classes
-    public static final ClassName context = ClassName.get("android.content", "Context");
-    public static final ClassName bundle = ClassName.get("android.os", "Bundle");
-    public static final ClassName intent = ClassName.get("android.content", "Intent");
+    public static final ClassName CONTEXT = ClassName.get("android.content", "Context");
+    public static final ClassName BUNDLE  = ClassName.get("android.os", "Bundle");
+    public static final ClassName INTENT  = ClassName.get("android.content", "Intent");
 
 }

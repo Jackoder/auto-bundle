@@ -15,4 +15,8 @@ public interface IAutoBundle<T> {
     void read(Bundle bundle, T target);
 
     void write(T target, Bundle bundle);
+
+    Bundle build();
+
+    Bundle build(Bundle bundle);
 }

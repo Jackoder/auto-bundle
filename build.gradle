@@ -15,10 +15,10 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {
-            name 'nd nexus android-public'
-            url "http://nexus.sdp.nd/nexus/content/groups/android-public/"
-        }
+//        maven {
+//            name 'nd nexus android-public'
+//            url "http://nexus.sdp.nd/nexus/content/groups/android-public/"
+//        }
         jcenter()
     }
 }

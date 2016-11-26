@@ -3,6 +3,8 @@ package com.jackoder.auto.bundle.compiler;
 import com.google.auto.service.AutoService;
 import com.jackoder.auto.bundle.ann.AutoBundle;
 import com.jackoder.auto.bundle.ann.Extra;
+import com.jackoder.auto.bundle.compiler.holder.BundleHolder;
+import com.jackoder.auto.bundle.compiler.writer.BundleWriter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,14 +52,17 @@ public class BundleProcessor extends AbstractProcessor implements IProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         try {
-            for (Element annotatedElement : roundEnv.getElementsAnnotatedWith(AutoBundle.class)) {
-                if (annotatedElement.getKind() == ElementKind.CLASS) {
-
+            for (Element element : roundEnv.getElementsAnnotatedWith(AutoBundle.class)) {
+                if (element.getKind() == ElementKind.CLASS) {
+                    BundleHolder bundleHolder = new BundleHolder((TypeElement) element, this);
+                    BundleWriter bundleWriter = new BundleWriter(bundleHolder, this);
+                    bundleWriter.write();
                 }
             }
+            return true;
         } catch (Exception e) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-                    "Exception while processing Lu classes. Message:\n%s" + e.getMessage());
+                    "Exception while processing AutoBundle classes. Message:\n" + e.getMessage());
         }
         return false;
     }
