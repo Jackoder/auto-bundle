@@ -20,7 +20,7 @@ public class AutoBundle {
     public static void read(Object target, Bundle bundle) {
         IAutoBundle autoBundle;
         if (target != null && (autoBundle = get().findAutoBundle(target.getClass())) != null) {
-            autoBundle.read(bundle, target);
+            autoBundle.read(target, bundle);
         }
         //TODO
     }

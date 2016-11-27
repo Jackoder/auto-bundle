@@ -63,8 +63,8 @@ public class BundleWriter {
         MethodSpec.Builder builder = methodBuilder(IAutoBundle.METHOD_READ)
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Override.class)
-                .addParameter(ClassProvider.BUNDLE, "bundle")
-                .addParameter(typeClassName, "target");
+                .addParameter(typeClassName, "target")
+                .addParameter(ClassProvider.BUNDLE, "bundle");
         for (ExtraHolder extraHolder : extraHolders) {
             if (extraHolder.isPrimitive()) {
                 builder.addStatement("target.$N = bundle.$N($S, target.$N)",

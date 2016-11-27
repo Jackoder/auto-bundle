@@ -12,7 +12,7 @@ public interface IAutoBundle<T> {
     String METHOD_WRITE = "write";
     String METHOD_BUILD = "build";
 
-    void read(Bundle bundle, T target);
+    void read(T target, Bundle bundle);
 
     void write(T target, Bundle bundle);
 
