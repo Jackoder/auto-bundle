@@ -13,5 +13,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Extra {
     String key();
-    Class<? extends Converter> converter() default ParcelConverter.class;
 }
