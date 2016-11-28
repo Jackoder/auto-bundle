@@ -1,5 +1,7 @@
-package com.jackoder.auto.bundle.compiler.helper;
+package com.jackoder.auto.bundle.compiler.helper.type;
 
+import com.jackoder.auto.bundle.compiler.helper.AbsTypeHelper;
+import com.jackoder.auto.bundle.compiler.helper.ClassProvider;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;

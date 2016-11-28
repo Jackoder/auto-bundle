@@ -16,7 +16,7 @@ import javax.lang.model.util.Elements;
  * @author Jackoder
  * @version 2016/11/26
  */
-public class ParcelableTypeVariableHelper extends AbsTypeHelper {
+public class ParcelableVariableHelper extends AbsTypeHelper {
 
     private static final ClassName       SPARSE_ARRAY_CLASS = ClassName.get("android.util", "SparseArray");
     public static        List<ClassName> supportedRawTypes  = Arrays.asList(
@@ -24,7 +24,7 @@ public class ParcelableTypeVariableHelper extends AbsTypeHelper {
             SPARSE_ARRAY_CLASS
     );
 
-    public ParcelableTypeVariableHelper(TypeName typeName, Elements elementUtils) {
+    public ParcelableVariableHelper(TypeName typeName, Elements elementUtils) {
         super(typeName);
         if (!isKnownParcelableTypeVariable(mTypeName, elementUtils)) {
             throw new IllegalStateException("ParcelableTypeVariableHelper used for an unsupported type");

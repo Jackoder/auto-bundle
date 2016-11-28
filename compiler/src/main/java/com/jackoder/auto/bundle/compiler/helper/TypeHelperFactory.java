@@ -1,9 +1,10 @@
 package com.jackoder.auto.bundle.compiler.helper;
 
 import com.jackoder.auto.bundle.compiler.helper.type.BinderHelper;
+import com.jackoder.auto.bundle.compiler.helper.type.KnownTypeHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.ParcelableArrayHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.ParcelableHelper;
-import com.jackoder.auto.bundle.compiler.helper.type.ParcelableTypeVariableHelper;
+import com.jackoder.auto.bundle.compiler.helper.type.ParcelableVariableHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.PrimitiveArrayHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.PrimitiveHelper;
 import com.jackoder.auto.bundle.compiler.helper.type.SerializableHelper;
@@ -41,8 +42,8 @@ public class TypeHelperFactory {
         if (ParcelableArrayHelper.isParcelableArray(typeName, elementUtils)) {
             return new ParcelableArrayHelper(typeName, elementUtils);
         }
-        if (ParcelableTypeVariableHelper.isKnownParcelableTypeVariable(typeName, elementUtils)) {
-            return new ParcelableTypeVariableHelper(typeName, elementUtils);
+        if (ParcelableVariableHelper.isKnownParcelableTypeVariable(typeName, elementUtils)) {
+            return new ParcelableVariableHelper(typeName, elementUtils);
         }
         if (isSerializable(typeName, elementUtils)) {
             return new SerializableHelper(typeName, elementUtils);
