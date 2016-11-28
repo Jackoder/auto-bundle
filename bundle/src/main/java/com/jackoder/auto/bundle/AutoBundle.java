@@ -17,9 +17,15 @@ public class AutoBundle {
 
     private Map<Class, IAutoBundle> mAutoBundleMap = new HashMap<>();
 
-    public static void read(Object target, Bundle bundle) {
+    public static void read(Object target, Bundle bundle, Bundle... bundles) {
         IAutoBundle autoBundle;
         if (target != null && (autoBundle = get().findAutoBundle(target.getClass())) != null) {
+            Bundle data = new Bundle(bundle);
+            if (bundles != null) {
+                for (Bundle temp : bundles) {
+                    data.putAll(temp);
+                }
+            }
             autoBundle.read(target, bundle);
         }
         //TODO

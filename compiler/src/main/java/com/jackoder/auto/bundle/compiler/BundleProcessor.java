@@ -29,7 +29,6 @@ public class BundleProcessor extends AbstractProcessor implements IProcessor {
     private Types    mTypeUtils;
     private Elements mElementUtils;
     private Filer    mFiler;
-
     private Messager mMessager;
 
     @Override

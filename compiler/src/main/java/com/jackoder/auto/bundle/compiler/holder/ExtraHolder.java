@@ -22,7 +22,6 @@ public class ExtraHolder {
     IProcessor mProcessor;
 
     AbsTypeHelper mTypeHelper;
-    TypeName      mTypeName;
     String        mFieldName;
     String        mKey;
 
